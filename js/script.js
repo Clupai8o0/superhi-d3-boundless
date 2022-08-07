@@ -33,9 +33,21 @@ function updateGraph() {
 	paths.attr("d", arcGenerator);
 }
 
-updateGraph();
+let loop = null;
+
+function startLoop() {
+	monthIndex = 0;
+	updateGraph();
+
+  clearInterval(loop);
+	loop = setInterval(() => {
+		monthIndex += 1;
+		updateGraph();
+	}, 500);
+}
+
+startLoop();
 
 document.querySelector("a.restart").addEventListener("click", () => {
-	monthIndex += 1;
-	updateGraph();
+	startLoop();
 });
