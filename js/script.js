@@ -14,7 +14,13 @@ svg.attr("width", 640).attr("height", 640);
 
 const pieGroup = svg.append("g").attr("transform", "translate(320, 320)");
 
+const monthLabel = d3.select("div.month");
+
 function updateGraph() {
+	const month = new Date(2009, monthIndex, 1);
+	const monthFormat = d3.timeFormat("%b %Y")
+	monthLabel.text(monthFormat(month));
+
 	const pieGenerator = d3.pie().sort(null);
 
 	const arcData = pieGenerator(data[monthIndex]);
@@ -39,7 +45,7 @@ function startLoop() {
 	monthIndex = 0;
 	updateGraph();
 
-  clearInterval(loop);
+	clearInterval(loop);
 	loop = setInterval(() => {
 		monthIndex += 1;
 		updateGraph();
