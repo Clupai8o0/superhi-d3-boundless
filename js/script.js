@@ -3,19 +3,16 @@ let monthIndex = 0;
 const svg = d3.select("svg");
 svg.attr("width", 640).attr("height", 640);
 
-const pieGroup = svg.append("g");
+const pieGroup = svg.append("g").attr("transform", "translate(320, 320)");
 
 function updateGraph() {
-	pieGroup
-		.selectAll("rect")
-		.data(data[monthIndex])
-		.enter()
-		.append("rect")
-		.attr("x", (_, i) => i * 100)
-		.attr("y", 0)
-		.attr("width", 90)
-		.attr("height", (d) => d)
-		.style("fill", "white");
+	const pieGenerator = d3.pie();
+	const arcData = pieGenerator(data[monthIndex]);
+	const arcGenerator = d3.arc().innerRadius(200).outerRadius(300);
+
+	const paths = pieGroup.selectAll("path").data(arcData);
+
+	paths.enter().append("path").attr("d", arcGenerator).style("fill", "white");
 }
 
 updateGraph();
