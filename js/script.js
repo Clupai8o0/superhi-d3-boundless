@@ -32,11 +32,32 @@ function updateGraph() {
 	paths
 		.enter()
 		.append("path")
+		//   d is for description
 		.attr("d", arcGenerator)
-		.style("fill", (_, i) => colors[i]);
+		.style("fill", (d, i) => {
+			return colors[i];
+		})
+		//   transition
+		.each(function (d, i) {
+			this.savedValue = d;
+		});
 
-	// for existing paths
-	paths.attr("d", arcGenerator);
+	//   for existing paths
+	paths
+		.transition()
+		.duration(500)
+		.ease(d3.easeLinear)
+		.attrTween("d", function (d, i) {
+			const startValue = this.savedValue;
+			const endValue = d;
+			const curve = d3.interpolate(startValue, endValue);
+
+			this.savedValue = d;
+
+			return function (t) {
+				return arcGenerator(curve(t));
+			};
+		});
 }
 
 let loop = null;
@@ -52,8 +73,8 @@ function startLoop() {
 		if (monthIndex >= data.length) {
 			clearInterval(loop);
 		} else {
-      updateGraph();
-    }
+			updateGraph();
+		}
 	}, 500);
 }
 
