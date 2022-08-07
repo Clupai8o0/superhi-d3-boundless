@@ -18,7 +18,7 @@ const monthLabel = d3.select("div.month");
 
 function updateGraph() {
 	const month = new Date(2009, monthIndex, 1);
-	const monthFormat = d3.timeFormat("%b %Y")
+	const monthFormat = d3.timeFormat("%b %Y");
 	monthLabel.text(monthFormat(month));
 
 	const pieGenerator = d3.pie().sort(null);
@@ -48,7 +48,12 @@ function startLoop() {
 	clearInterval(loop);
 	loop = setInterval(() => {
 		monthIndex += 1;
-		updateGraph();
+
+		if (monthIndex >= data.length) {
+			clearInterval(loop);
+		} else {
+      updateGraph();
+    }
 	}, 500);
 }
 
